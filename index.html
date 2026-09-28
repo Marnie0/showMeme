@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="css/all.min.css" />
+    <link rel="stylesheet" href="css/bootstrap.min.css" />
+    <link rel="stylesheet" href="css/style.css" />
+    <title>Show Meme</title>
+  </head>
+  <body class="bg-dark">
+    <main>
+      <form
+        class="main min-vh-100 d-flex justify-content-center align-items-center flex-column gap-2 pt-2"
+        novalidate
+      >
+        <p class="text-danger fs-2">Enter Number From 0 to 99</p>
+        <input
+          type="number"
+          id="memeInput"
+          class="form-control w-25"
+          required
+          min="0"
+          max="99"
+        />
+        <button type="submit" class="showMemeBtn btn btn-danger mt-2" id="btn">
+          Show Meme
+        </button>
+        <p id="error" class="text-danger d-none fs-4 fw-bold">
+          Please enter an integer between 0 and 99.
+        </p>
+      </form>
+      <section class="memeContainer mt-4 d-none">
+        <p class="memeTitle text-center text-success fs-5 fw-bold"></p>
+        <img src="" alt="Meme" class="memeImage img-fluid d-block mx-auto" />
+      </section>
+    </main>
+    <script src="js/bootstrap.bundle.min.js"></script>
+    <script src="js/script.js"></script>
+  </body>
+</html>
