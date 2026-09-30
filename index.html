@@ -23,11 +23,18 @@
           min="0"
           max="99"
         />
+        <div class="buttons">
+        <button type="button" class="showPreviousMemeBtn btn btn-primary mt-2 d-none" id="btn">
+          Show Previous Meme
+        </button>
         <button type="submit" class="showMemeBtn btn btn-danger mt-2" id="btn">
           Show Meme
         </button>
+        <button type="button" class="showNextMemeBtn btn btn-success mt-2 d-none" id="btn">
+          Show Next Meme
+        </button>
+        </div>
         <p id="error" class="text-danger d-none fs-4 fw-bold">
-          Please enter an integer between 0 and 99.
         </p>
       </form>
       <section class="memeContainer mt-4 d-none">
