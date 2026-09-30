@@ -6,7 +6,16 @@ const memeTitle = document.querySelector(".memeContainer .memeTitle");
 const memeImage = document.querySelector(".memeContainer .memeImage");
 const showPreviousMemeBtn = document.querySelector(".showPreviousMemeBtn");
 const showNextMemeBtn = document.querySelector(".showNextMemeBtn");
+let currentMemeIndex = -1;
 
+function buttonsStateAtIndex(btn,index) {
+  currentMemeIndex === index ? btn.disabled = true : btn.disabled = false
+}
+
+function nextAndPreviousButtonsState() {
+  buttonsStateAtIndex(showPreviousMemeBtn, 0);
+  buttonsStateAtIndex(showNextMemeBtn, 99);
+}
 
 function showError(message) {
   main.classList.add("min-vh-100");
@@ -17,6 +26,9 @@ function showError(message) {
   showNextMemeBtn.classList.add("d-none");
 }
 
+function isValidMemeIndex() {
+    return currentMemeIndex >= 0 && currentMemeIndex <= 99;
+}
 
 function showInvalidInput() {
   showError("Please enter an integer between 0 and 99.");
@@ -24,6 +36,22 @@ function showInvalidInput() {
 
 function showFetchError(error) {
   showError(`Error fetching meme: ${error.message}`);
+}
+
+function displayMeme() {
+  fetch("https://api.imgflip.com/get_memes")
+    .then((response) => response.json())
+    .then((data) => {
+      const meme = data.data.memes[currentMemeIndex];
+      input.value = currentMemeIndex;
+      memeTitle.textContent = meme.name;
+      memeImage.src = meme.url;
+      showMemeResult();
+      nextAndPreviousButtonsState();
+    })
+    .catch((error) => {
+      showFetchError(error);
+    });
 }
 
 function showMemeResult() {
@@ -34,40 +62,22 @@ function showMemeResult() {
   showNextMemeBtn.classList.remove("d-none");
 }
 
-function displayMeme() {
-  fetch("https://api.imgflip.com/get_memes")
-    .then((response) => response.json())
-    .then((data) => {
-      const meme = data.data.memes[input.valueAsNumber];
-
-      memeTitle.textContent = meme.name;
-      memeImage.src = meme.url;
-      showMemeResult();
-    })
-    .catch((error) => {
-      showFetchError(error);
-    });
-}
-
 function validateAndDisplayMeme() {
-  if (!input.checkValidity()) {
-    showInvalidInput();
-  } else {
-    displayMeme();
-  }
+  isValidMemeIndex() ? displayMeme() : showInvalidInput();
 }
 
 main.addEventListener("submit", (event) => {
   event.preventDefault();
+  currentMemeIndex = input.valueAsNumber;
   validateAndDisplayMeme();
 });
 
 showPreviousMemeBtn.addEventListener("click", () => {
-  input.value--;
+  currentMemeIndex--;
   validateAndDisplayMeme();
 });
 
 showNextMemeBtn.addEventListener("click", () => {
-  input.value++;
+  currentMemeIndex++;
   validateAndDisplayMeme();
 });
