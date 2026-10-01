@@ -4,12 +4,14 @@ const input = document.querySelector("#memeInput");
 const memeContainer = document.querySelector(".memeContainer");
 const memeTitle = document.querySelector(".memeContainer .memeTitle");
 const memeImage = document.querySelector(".memeContainer .memeImage");
+const showMemeBtn = document.querySelector(".showMemeBtn");
 const showPreviousMemeBtn = document.querySelector(".showPreviousMemeBtn");
 const showNextMemeBtn = document.querySelector(".showNextMemeBtn");
 let currentMemeIndex = -1;
+let memes = [];
 
-function buttonsStateAtIndex(btn,index) {
-  currentMemeIndex === index ? btn.disabled = true : btn.disabled = false
+function buttonsStateAtIndex(btn, index) {
+  currentMemeIndex === index ? (btn.disabled = true) : (btn.disabled = false);
 }
 
 function nextAndPreviousButtonsState() {
@@ -27,7 +29,7 @@ function showError(message) {
 }
 
 function isValidMemeIndex() {
-    return currentMemeIndex >= 0 && currentMemeIndex <= 99;
+  return currentMemeIndex >= 0 && currentMemeIndex <= 99;
 }
 
 function showInvalidInput() {
@@ -38,20 +40,26 @@ function showFetchError(error) {
   showError(`Error fetching meme: ${error.message}`);
 }
 
-function displayMeme() {
+function fetchMemes() {
+  showMemeBtn.disabled = true;
   fetch("https://api.imgflip.com/get_memes")
     .then((response) => response.json())
     .then((data) => {
-      const meme = data.data.memes[currentMemeIndex];
-      input.value = currentMemeIndex;
-      memeTitle.textContent = meme.name;
-      memeImage.src = meme.url;
-      showMemeResult();
-      nextAndPreviousButtonsState();
+      memes = data.data.memes;
+      showMemeBtn.disabled = false;
     })
     .catch((error) => {
       showFetchError(error);
     });
+}
+
+function displayMeme() {
+  const meme = memes[currentMemeIndex];
+  input.value = currentMemeIndex;
+  memeTitle.textContent = meme.name;
+  memeImage.src = meme.url;
+  showMemeResult();
+  nextAndPreviousButtonsState();
 }
 
 function showMemeResult() {
@@ -81,3 +89,5 @@ showNextMemeBtn.addEventListener("click", () => {
   currentMemeIndex++;
   validateAndDisplayMeme();
 });
+
+fetchMemes();
